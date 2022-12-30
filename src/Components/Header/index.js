@@ -1,8 +1,18 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+
 const Header = () => {
+  let navigate=useNavigate()
+  let userName=localStorage.getItem("name")
+
+  const logout=()=>{
+    navigate('/login')
+    localStorage.removeItem('name')
+    localStorage.removeItem('email')
+    localStorage.removeItem('password')
+  }
   return (
     <>
-      <div className="container-scroller">
         <nav className="navbar p-0 fixed-top d-flex flex-row">
           <div className="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
             <a className="navbar-brand brand-logo-mini" href="index.php">
@@ -238,7 +248,7 @@ const Header = () => {
                       alt
                     />
                     <p className="mb-0 d-none d-sm-block navbar-profile-name">
-                      Henry Klein
+                      {userName}  
                     </p>
                     <i className="mdi mdi-menu-down d-none d-sm-block" />
                   </div>
@@ -260,7 +270,7 @@ const Header = () => {
                     </div>
                   </a>
                   <div className="dropdown-divider" />
-                  <a className="dropdown-item preview-item">
+                  <a className="dropdown-item preview-item" onClick={logout}>
                     <div className="preview-thumbnail">
                       <div className="preview-icon bg-dark rounded-circle">
                         <i className="mdi mdi-logout text-danger" />
@@ -284,7 +294,7 @@ const Header = () => {
             </button>
           </div>
         </nav>
-      </div>
+    
     </>
   );
 };

@@ -1,6 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
+
+  const signUp = () => {
+    if (
+      name === "admin" &&
+      email === "admin@gmail.com" &&
+      password === "admin@123"
+    ) {
+      // const data = [name, email, password];
+      navigate("/login");
+      localStorage.setItem("name", name);
+      localStorage.setItem("email", email);
+      localStorage.setItem("password", password);
+    } else {
+      alert("enter valid value....!");
+    }
+  };
   return (
     <div>
       <div className="container-fluid page-body-wrapper full-page-wrapper">
@@ -12,15 +34,39 @@ const Register = () => {
                 <form>
                   <div className="form-group">
                     <label>Username</label>
-                    <input type="text" className="form-control p_input" />
+                    <input
+                      type="text"
+                      className="form-control p_input"
+                      required
+                      value={name}
+                      onChange={(e) => {
+                        setName(e.target.value);
+                      }}
+                    />
                   </div>
                   <div className="form-group">
                     <label>Email</label>
-                    <input type="email" className="form-control p_input" />
+                    <input
+                      type="email"
+                      className="form-control p_input"
+                      required
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                      }}
+                    />
                   </div>
                   <div className="form-group">
                     <label>Password</label>
-                    <input type="password" className="form-control p_input" />
+                    <input
+                      type="password"
+                      className="form-control p_input"
+                      required
+                      value={password}
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                      }}
+                    />
                   </div>
                   <div className="form-group d-flex align-items-center justify-content-between">
                     <div className="form-check">
@@ -37,8 +83,9 @@ const Register = () => {
                     <button
                       type="submit"
                       className="btn btn-primary btn-block enter-btn"
+                      onClick={()=>{signUp()}}
                     >
-                      Login
+                      Sign Up
                     </button>
                   </div>
                   <div className="d-flex">
@@ -50,7 +97,7 @@ const Register = () => {
                     </button>
                   </div>
                   <p className="sign-up text-center">
-                    Already have an Account?<a href="#"> Sign Up</a>
+                    Already have an Account?<Link to="/login"> Sign In</Link>
                   </p>
                   <p className="terms">
                     By creating an account you are accepting our

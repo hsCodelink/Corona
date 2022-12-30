@@ -1,11 +1,20 @@
-import React from 'react'
+import React, { useState } from "react";
+import User from "../User";
 
 const Home = () => {
+  
   return (
     <>
-      <div>Home</div>
+      <div className="container-fluid page-body-wrapper">
+        <div className="main-panel">
+          <div className="content-wrapper">
+            <User/>
+          </div>
+        </div>
+      </div>
+      
     </>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

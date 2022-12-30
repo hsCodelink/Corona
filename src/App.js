@@ -1,23 +1,25 @@
 import "./App.css";
 import Home from "./pages/Home";
 import Layout from "./Components/Layout";
-import {BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "./pages/Sample/login";
-import Register from "./pages/Sample/register";
+import { BrowserRouter, Routes, Route, redirect } from "react-router-dom";
+import Login from "./Components/Authuntication/login";
+import Register from "./Components/Authuntication/register";
+import User from "./pages/User";
 
 function App() {
   return (
     <>
-    <BrowserRouter>
-      <Routes>
+      <BrowserRouter>
+        <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            {/* <Route path="/" element={<About />} /> */}
-          </Route>   
-          <Route path="/login" element={<Login/>}/>
-          <Route path="/register" element={<Register/>}/>
-      </Routes>
-    </BrowserRouter>
+            {/* <Route path="*" element={<Home />} /> */}
+          </Route>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/user" element={<User/>}/>
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
