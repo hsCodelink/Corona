@@ -8,7 +8,7 @@ const Home = () => {
       <div className="container-fluid page-body-wrapper">
         <div className="main-panel">
           <div className="content-wrapper">
-            <User/>
+              Home Page
           </div>
         </div>
       </div>
