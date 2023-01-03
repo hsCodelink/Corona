@@ -5,6 +5,7 @@ const initialValues = {
   name: "",
   email: "",
   number: "",
+  field: "",
 };
 
 const User = () => {
@@ -18,7 +19,7 @@ const User = () => {
   // ]);
 
   // const test = (dob) => {
-  //   setUser1({...user1})
+
   // };
 
   const [userData, setUserData] = useState(initialValues);
@@ -59,6 +60,20 @@ const User = () => {
   const [toggle, setToggle] = useState(true);
   const [dataEdit, setDataEdit] = useState(null);
   const [dataDeleteId, setDataDeleteId] = useState(null);
+  const [fieldToggle, setFieldToggle] = useState(true);
+  const [fileds, setFileds] = useState([
+    "name",
+    "email",
+    "number",
+    "salary",
+    "dob",
+    "status",
+  ]);
+  const [addFileds, setAddFileds] = useState("");
+
+  // useEffect(() => {
+  //   console.log("addFileds : ", addFileds);
+  // }, [addFileds]);
 
   const eventHandle = (e) => {
     const name = e.target.name;
@@ -71,9 +86,12 @@ const User = () => {
   //   console.log("item : ", item);
   // }, [item]);
 
-  // useEffect(() => {
-  //   console.log("userData : ", userData);
-  // }, [userData]);
+  useEffect(() => {
+    console.log("fileds : ", fileds);
+  }, [fileds]);
+  useEffect(() => {
+    console.log("userData : ", userData);
+  }, [userData]);
 
   // ===============================Edit Part==========================================
 
@@ -88,12 +106,14 @@ const User = () => {
 
   const update = (e) => {
     e.preventDefault();
-    setItem(item.map((item)=>{
-      if(item.id===dataEdit){
-        return 
-      }
-      return item
-    }));
+    setItem(
+      item.map((item) => {
+        if (item.id === dataEdit) {
+          return { ...item, ...userData };
+        }
+        return item;
+      })
+    );
     setToggle(true);
   };
 
@@ -101,6 +121,7 @@ const User = () => {
 
   const deletebtn = (id) => {
     setDataDeleteId(id);
+    setFieldToggle(false);
   };
 
   const deleteItem = () => {
@@ -134,6 +155,15 @@ const User = () => {
     setUserData(initialValues);
   };
 
+  const addFiled = () => {
+    setFieldToggle(true);
+    // const value=e.target.value;
+    console.log("value");
+    setFileds((prev) => {
+      return [...prev, userData.field]; 
+    });
+  };
+
   // something
 
   // const number1 = 10;
@@ -156,19 +186,24 @@ const User = () => {
                     {toggle ? "Add User" : "Update User"}
                   </h4>
                   <form className="forms-sample">
-                    <div className="form-group">
-                      <label htmlFor="exampleInputUsername1">Name</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="exampleInputUsername1"
-                        placeholder="Username"
-                        name="name"
-                        value={userData.name}
-                        onChange={eventHandle}
-                      />
-                    </div>
-                    <div className="form-group">
+                    {fileds.map((item, index) => {
+                      return (
+                        <div className="form-group" key={index}>
+                          <label htmlFor="exampleInputUsername1">{item}</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="exampleInputUsername1"
+                            placeholder="Username"
+                            name={item}
+                            value={userData.item}
+                            onChange={eventHandle}
+                          />
+                        </div>
+                      );
+                    })}
+
+                    {/* <div className="form-group">
                       <label htmlFor="exampleInputEmail1">Email address</label>
                       <input
                         type="email"
@@ -191,7 +226,7 @@ const User = () => {
                         value={userData.number}
                         onChange={eventHandle}
                       />
-                    </div>
+                    </div> */}
 
                     <button
                       type="submit"
@@ -239,7 +274,7 @@ const User = () => {
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title" id="exampleModalLabel">
-                    Delete Confirmation
+                    {fieldToggle ? "Add Field" : "Delete Confirmation"}
                   </h5>
                   <button
                     type="button"
@@ -248,7 +283,22 @@ const User = () => {
                     aria-label="Close"
                   />
                 </div>
-                <div className="modal-body">Are You Sure Delete ?</div>
+                <div className="modal-body">
+                  {" "}
+                  {fieldToggle ? (
+                    <form>
+                      <input
+                        type="text"
+                        placeholder="Enter New Filed "
+                        name="field"
+                        value={userData.field}
+                        onChange={eventHandle}
+                      ></input>
+                    </form>
+                  ) : (
+                    "Are You Sure Delete ?"
+                  )}
+                </div>
                 <div className="modal-footer">
                   <button
                     type="button"
@@ -259,11 +309,13 @@ const User = () => {
                   </button>
                   <button
                     type="button"
-                    className="btn btn-danger"
+                    className={
+                      fieldToggle ? "btn btn-success" : "btn btn-danger"
+                    }
                     data-bs-dismiss="modal"
-                    onClick={deleteItem}
+                    onClick={fieldToggle ? addFiled : deleteItem}
                   >
-                    Delete
+                    {fieldToggle ? "Add Filed" : "Delete"}
                   </button>
                 </div>
               </div>
@@ -276,25 +328,44 @@ const User = () => {
             <div className="col-lg-12 stretch-card">
               <div className="card">
                 <div className="card-body">
-                  <h4 className="card-title">Users</h4>
+                  <div className="main_table_title">
+                    <h4 className="card-title">Users</h4>
+                    <button
+                      type="button"
+                      className="btn btn-inverse-success btn-fw"
+                      data-bs-toggle="modal"
+                      data-bs-target="#exampleModal"
+                      onClick={(e) => {
+                        addFiled(e);
+                      }}
+                    >
+                      Add Field
+                    </button>
+                  </div>
+
                   <div className="table-responsive">
                     <table className="table table-bordered table-contextual">
                       <thead>
                         <tr>
-                          <th> Name </th>
-                          <th> Email </th>
-                          <th> Mobile No. </th>
-                          <th> Edit </th>
-                          <th> Delete </th>
+                          {fileds.map((filed, index) => {
+                            return <th key={index}> {filed}</th>;
+                          })}
+                          <th>Edit</th>
+                          <th>Delete</th>
                         </tr>
                       </thead>
                       <tbody className="main_table">
                         {item.map((item, index) => {
                           return (
                             <tr key={index}>
-                              <td> {item.name} </td>
+                              {fileds.map((field, index) => (
+                                <td key={index}> {item[field]} </td>
+                              ))}
+                              {/* <td> {item.name} </td>
                               <td> {item.email} </td>
                               <td> {item.number} </td>
+                              <td> {item.salary} </td>
+                              <td> {item.dob} </td> */}
                               <td>
                                 {" "}
                                 <div className="col-sm-6 col-md-4 col-lg-3">
