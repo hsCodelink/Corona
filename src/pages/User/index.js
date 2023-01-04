@@ -61,7 +61,7 @@ const User = () => {
   const [dataEdit, setDataEdit] = useState(null);
   const [dataDeleteId, setDataDeleteId] = useState(null);
   const [fieldToggle, setFieldToggle] = useState(true);
-  const [fileds, setFileds] = useState([
+  const [fields, setFields] = useState([
     "name",
     "email",
     "number",
@@ -69,7 +69,6 @@ const User = () => {
     "dob",
     "status",
   ]);
-  const [addFileds, setAddFileds] = useState("");
 
   // useEffect(() => {
   //   console.log("addFileds : ", addFileds);
@@ -87,8 +86,8 @@ const User = () => {
   // }, [item]);
 
   useEffect(() => {
-    console.log("fileds : ", fileds);
-  }, [fileds]);
+    console.log("fileds : ", fields);
+  }, [fields]);
   useEffect(() => {
     console.log("userData : ", userData);
   }, [userData]);
@@ -96,11 +95,10 @@ const User = () => {
   // ===============================Edit Part==========================================
 
   const edit = (id) => {
-    const edit = item.find((item) => {
-      return item.id === id;
-    });
     setToggle(false);
-    setUserData(edit);
+    setUserData(item.find((item) => {
+      return item.id === id;
+    }));
     setDataEdit(id);
   };
 
@@ -109,7 +107,7 @@ const User = () => {
     setItem(
       item.map((item) => {
         if (item.id === dataEdit) {
-          return { ...item, ...userData };
+          return { ...item, ...userData};
         }
         return item;
       })
@@ -155,14 +153,17 @@ const User = () => {
     setUserData(initialValues);
   };
 
-  const addFiled = () => {
+  const addField = () => {
     setFieldToggle(true);
-    // const value=e.target.value;
-    console.log("value");
-    setFileds((prev) => {
+    if(userData.field)
+    {
+    setFields((prev) => {
       return [...prev, userData.field]; 
     });
+  }
   };
+
+    
 
   // something
 
@@ -186,7 +187,7 @@ const User = () => {
                     {toggle ? "Add User" : "Update User"}
                   </h4>
                   <form className="forms-sample">
-                    {fileds.map((item, index) => {
+                    {fields.map((item, index) => {
                       return (
                         <div className="form-group" key={index}>
                           <label htmlFor="exampleInputUsername1">{item}</label>
@@ -194,7 +195,7 @@ const User = () => {
                             type="text"
                             className="form-control"
                             id="exampleInputUsername1"
-                            placeholder="Username"
+                            placeholder="Enter Value In Box"
                             name={item}
                             value={userData.item}
                             onChange={eventHandle}
@@ -202,32 +203,6 @@ const User = () => {
                         </div>
                       );
                     })}
-
-                    {/* <div className="form-group">
-                      <label htmlFor="exampleInputEmail1">Email address</label>
-                      <input
-                        type="email"
-                        className="form-control"
-                        id="exampleInputEmail1"
-                        placeholder="Email"
-                        name="email"
-                        value={userData.email}
-                        onChange={eventHandle}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="exampleInputPassword1">Mobile No.</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="exampleInputPassword1"
-                        placeholder="Mobile Number"
-                        name="number"
-                        value={userData.number}
-                        onChange={eventHandle}
-                      />
-                    </div> */}
-
                     <button
                       type="submit"
                       className="btn btn-primary me-2"
@@ -313,9 +288,9 @@ const User = () => {
                       fieldToggle ? "btn btn-success" : "btn btn-danger"
                     }
                     data-bs-dismiss="modal"
-                    onClick={fieldToggle ? addFiled : deleteItem}
+                    onClick={fieldToggle ? addField : deleteItem}
                   >
-                    {fieldToggle ? "Add Filed" : "Delete"}
+                    {fieldToggle ? "Add Field" : "Delete"}
                   </button>
                 </div>
               </div>
@@ -336,7 +311,7 @@ const User = () => {
                       data-bs-toggle="modal"
                       data-bs-target="#exampleModal"
                       onClick={(e) => {
-                        addFiled(e);
+                        addField(e);
                       }}
                     >
                       Add Field
@@ -347,7 +322,7 @@ const User = () => {
                     <table className="table table-bordered table-contextual">
                       <thead>
                         <tr>
-                          {fileds.map((filed, index) => {
+                          {fields.map((filed, index) => {
                             return <th key={index}> {filed}</th>;
                           })}
                           <th>Edit</th>
@@ -358,7 +333,7 @@ const User = () => {
                         {item.map((item, index) => {
                           return (
                             <tr key={index}>
-                              {fileds.map((field, index) => (
+                              {fields.map((field, index) => (
                                 <td key={index}> {item[field]} </td>
                               ))}
                               {/* <td> {item.name} </td>
