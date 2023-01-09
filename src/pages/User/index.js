@@ -7,7 +7,7 @@ const initialValues = {
   number: "",
   field: "",
 };
-
+  
 const User = () => {
   const [userData, setUserData] = useState(initialValues);
 
@@ -51,10 +51,9 @@ const User = () => {
 
   const edit = (id) => {
     setToggle(false);
-    const editData = item.find((item) => {
+    setUserData(item.find((item) => {
       return item.id === id;
-    });
-    setUserData(editData);
+    }));
     setDataEdit(id);
   };
 
@@ -97,7 +96,6 @@ const User = () => {
 
   const submit = (e) => {
     e.preventDefault();
-    console.log("budddd", userData.name);
 
     setError({ name: null, email: null, number: null });
 
@@ -112,7 +110,7 @@ const User = () => {
       }));
     }
 
-    if (error.name !== null && error.email !== null && error.number !== null) {
+    if (error.name !== "" && error.email !== "" && error.number !== "") {
       console.log("form is valid");
       setItem((prev) => {
         return [
@@ -208,7 +206,7 @@ const User = () => {
               <div className="card">
                 <div className="card-body">
                   <h4 className="card-title">
-                    {toggle ? "Add User" : "Update User"}
+                   add User
                   </h4>
                   {form}
                 </div>
@@ -300,8 +298,8 @@ const User = () => {
                     <table className="table table-bordered table-contextual">
                       <thead>
                         <tr>
-                          {fields.map((filed, index) => {
-                            return <th key={index}> {filed}</th>;
+                          {fields.map((field, index) => {
+                            return <th key={index}> {field}</th>;
                           })}
                           <th>Edit</th>
                           <th>Delete</th>
