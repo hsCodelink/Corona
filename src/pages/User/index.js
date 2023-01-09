@@ -9,19 +9,6 @@ const initialValues = {
 };
 
 const User = () => {
-  // const [user1, setUser1] = useState([
-  //   {
-  //     name: "Harsh",
-  //     age: 21,
-  //     salary: 100,
-  //     dob: "14/06/2002",
-  //   },
-  // ]);
-
-  // const test = (dob) => {
-
-  // };
-
   const [userData, setUserData] = useState(initialValues);
 
   const [item, setItem] = useState([
@@ -37,68 +24,37 @@ const User = () => {
       email: "harshsavaliya250@gmail.com",
       number: 99999999,
     },
-    {
-      id: 3,
-      name: "Harsh 3",
-      email: "harshsavaliya250@gmail.com",
-      number: 99999999,
-    },
-    {
-      id: 4,
-      name: "Harsh 4",
-      email: "harshsavaliya250@gmail.com",
-      number: 99999999,
-    },
-    {
-      id: 5,
-      name: "Harsh 5",
-      email: "harshsavaliya250@gmail.com",
-      number: 99999999,
-    },
   ]);
 
   const [toggle, setToggle] = useState(true);
   const [dataEdit, setDataEdit] = useState(null);
   const [dataDeleteId, setDataDeleteId] = useState(null);
   const [fieldToggle, setFieldToggle] = useState(true);
-  const [fields, setFields] = useState([
-    "name",
-    "email",
-    "number",
-    "salary",
-    "dob",
-    "status",
-  ]);
-
-  // useEffect(() => {
-  //   console.log("addFileds : ", addFileds);
-  // }, [addFileds]);
+  const [fields, setFields] = useState(["name", "email", "number"]);
+  const [form, setForm] = useState(null);
+  const [error, setError] = useState({
+    name: null,
+    email: null,
+    number: null,
+  });
 
   const eventHandle = (e) => {
     const name = e.target.name;
     const value = e.target.value;
 
-    setUserData({ ...userData, [name]: value });
+    setUserData((prev) => {
+      return { ...prev, [name]: value };
+    });
   };
-
-  // useEffect(() => {
-  //   console.log("item : ", item);
-  // }, [item]);
-
-  useEffect(() => {
-    console.log("fileds : ", fields);
-  }, [fields]);
-  useEffect(() => {
-    console.log("userData : ", userData);
-  }, [userData]);
 
   // ===============================Edit Part==========================================
 
   const edit = (id) => {
     setToggle(false);
-    setUserData(item.find((item) => {
+    const editData = item.find((item) => {
       return item.id === id;
-    }));
+    });
+    setUserData(editData);
     setDataEdit(id);
   };
 
@@ -107,12 +63,13 @@ const User = () => {
     setItem(
       item.map((item) => {
         if (item.id === dataEdit) {
-          return { ...item, ...userData};
+          return { ...item, ...userData };
         }
         return item;
       })
     );
     setToggle(true);
+    setUserData(initialValues);
   };
 
   // ===============================Delete Part==========================================
@@ -130,21 +87,43 @@ const User = () => {
     );
   };
 
+  useEffect(() => {
+    console.log("error : ", error);
+  }, [error]);
+
   /**
    * Submit Cart
    */
 
   const submit = (e) => {
     e.preventDefault();
+    console.log("budddd", userData.name);
 
-    setItem((prev) => {
-      return [
+    setError({ name: null, email: null, number: null });
+
+    if (userData.name === "") {
+      setError((prev) => ({ ...prev, name: "Please Enter Valid Name ..!" }));
+    } else if (userData.email === "") {
+      setError((prev) => ({ ...prev, email: "Please Enetr valid Email ..!" }));
+    } else if (userData.number == "") {
+      setError((prev) => ({
         ...prev,
-        { ...userData, id: Math.floor(Math.random() * 500) + 1 },
-      ];
-    });
+        number: "Please Enter valid Number ..!",
+      }));
+    }
 
-    setUserData(initialValues);
+    if (error.name !== null && error.email !== null && error.number !== null) {
+      console.log("form is valid");
+      setItem((prev) => {
+        return [
+          ...prev,
+          { ...userData, id: Math.floor(Math.random() * 500) + 1 },
+        ];
+      });
+      setUserData(initialValues);
+    } else {
+      console.log("form is not valid");
+    }
   };
 
   const Cancel = (e) => {
@@ -155,25 +134,70 @@ const User = () => {
 
   const addField = () => {
     setFieldToggle(true);
-    if(userData.field)
-    {
-    setFields((prev) => {
-      return [...prev, userData.field]; 
-    });
-  }
+    if (userData.field) {
+      setFields((prev) => {
+        return [...prev, userData.field];
+      });
+    }
   };
 
-    
+  const getFormValue = () => {
+    return (
+      <form className="forms-sample">
+        {fields.map((item, index) => {
+          return (
+            <div className="form-group" key={index}>
+              <label htmlFor="exampleInputUsername1">{item}</label>
+              <input
+                type="text"
+                className="form-control"
+                id="exampleInputUsername1"
+                placeholder="Enter Value In Box"
+                name={item}
+                value={userData[item] || " "}
+                onChange={eventHandle}
+              />
+              {error[item] && <p className="text-danger">{error[item]}</p>}
+            </div>
+          );
+        })}
+        <button
+          type="submit"
+          className="btn btn-primary me-2"
+          // disabled={
+          //   userData.name === "" ||
+          //   userData.email === "" ||
+          //   userData.number === ""
+          // }
+          onClick={
+            toggle
+              ? (e) => {
+                  submit(e);
+                }
+              : (e) => {
+                  update(e);
+                }
+          }
+        >
+          {toggle ? "Submit" : "Update"}
+        </button>
 
-  // something
+        <button
+          className="btn btn-dark"
+          onClick={(e) => {
+            Cancel(e);
+          }}
+        >
+          Cancel
+        </button>
+      </form>
+    );
+  };
 
-  // const number1 = 10;
-  // const number2 = 20;
-  // console.log(
-  //   "number 1: ",
-  //   number1 === 20 || number1 === 30 || number1 === 40 || number2 === 20
-  // );
-  // console.log("number2: ", number2)
+  useEffect(() => {
+    const getForm = getFormValue();
+    setForm(getForm);
+  }, [userData, fields, error]);
 
   return (
     <div className="container-fluid page-body-wrapper">
@@ -186,53 +210,7 @@ const User = () => {
                   <h4 className="card-title">
                     {toggle ? "Add User" : "Update User"}
                   </h4>
-                  <form className="forms-sample">
-                    {fields.map((item, index) => {
-                      return (
-                        <div className="form-group" key={index}>
-                          <label htmlFor="exampleInputUsername1">{item}</label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="exampleInputUsername1"
-                            placeholder="Enter Value In Box"
-                            name={item}
-                            value={userData.item}
-                            onChange={eventHandle}
-                          />
-                        </div>
-                      );
-                    })}
-                    <button
-                      type="submit"
-                      className="btn btn-primary me-2"
-                      disabled={
-                        userData.name === "" ||
-                        userData.email === "" ||
-                        userData.number === ""
-                      }
-                      onClick={
-                        toggle
-                          ? (e) => {
-                              submit(e);
-                            }
-                          : (e) => {
-                              update(e);
-                            }
-                      }
-                    >
-                      {toggle ? "Submit" : "Update"}
-                    </button>
-
-                    <button
-                      className="btn btn-dark"
-                      onClick={(e) => {
-                        Cancel(e);
-                      }}
-                    >
-                      Cancel
-                    </button>
-                  </form>
+                  {form}
                 </div>
               </div>
             </div>
@@ -266,7 +244,7 @@ const User = () => {
                         type="text"
                         placeholder="Enter New Filed "
                         name="field"
-                        value={userData.field}
+                        value={userData.field || ""}
                         onChange={eventHandle}
                       ></input>
                     </form>
@@ -336,11 +314,6 @@ const User = () => {
                               {fields.map((field, index) => (
                                 <td key={index}> {item[field]} </td>
                               ))}
-                              {/* <td> {item.name} </td>
-                              <td> {item.email} </td>
-                              <td> {item.number} </td>
-                              <td> {item.salary} </td>
-                              <td> {item.dob} </td> */}
                               <td>
                                 {" "}
                                 <div className="col-sm-6 col-md-4 col-lg-3">
@@ -373,20 +346,6 @@ const User = () => {
                             </tr>
                           );
                         })}
-                        {/* <ul>
-                          {user1.map((item, index) => {
-                            return (
-                              <>
-                                <li>{item.name}</li>
-                                <li>{item.age}</li>
-                                <li>{item.salary}</li>
-                                <li>{item.dob}</li>
-
-                                <button onClick={}>test</button>
-                              </>
-                            );
-                          })}
-                        </ul> */}
                       </tbody>
                     </table>
                   </div>
