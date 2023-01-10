@@ -5,7 +5,6 @@ const initialvalue = {
   number: "",
   gender: "",
   city: "",
-  hobby:""
 };
 const Form = () => {
   const [field, setField] = useState(initialvalue);
@@ -19,27 +18,28 @@ const Form = () => {
 
 
     setField((prev) => {
-      return { ...prev, [name]: type === "checkbox" ? checked : value };
+      return { ...prev, [name]: value };
+
+      
+    //   type === "checkbox" ? ischecked 
     });
   
-
     if(checked)
     {
         setIsChecked((prev)=>{
             return [
             ...prev ,value
         ]})
+
     }
     else{
         setIsChecked((prev)=>{
             return [...prev.filter(current => current !== value)]
         })
     }
-   
-    
   };
   useEffect(() => {
-    console.log("checked ",ischecked)
+    console.log("hobbyChecked : ", ischecked)
   }, [ischecked])
   
   const submit = (e) => {
